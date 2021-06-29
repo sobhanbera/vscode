@@ -1642,9 +1642,7 @@ export namespace TestItem {
 			label: item.label,
 			uri: item.uri,
 			range: Range.from(item.range) || null,
-			debuggable: item.debuggable ?? false,
 			description: item.description || null,
-			runnable: item.runnable ?? true,
 			error: item.error ? (MarkdownString.fromStrict(item.error) || null) : null,
 		};
 	}
@@ -1655,10 +1653,8 @@ export namespace TestItem {
 			label: item.label,
 			uri: item.uri,
 			range: Range.from(item.range) || null,
-			debuggable: false,
 			description: item.description || null,
 			error: null,
-			runnable: true,
 		};
 	}
 
@@ -1672,18 +1668,14 @@ export namespace TestItem {
 			invalidateResults: () => undefined,
 			canResolveChildren: false,
 			busy: false,
-			debuggable: item.debuggable,
 			description: item.description || undefined,
-			runnable: item.runnable,
 		};
 	}
 
 	export function to(item: ITestItem, parent?: vscode.TestItem): types.TestItemImpl {
 		const testItem = new types.TestItemImpl(item.extId, item.label, URI.revive(item.uri), undefined, parent);
 		testItem.range = Range.to(item.range || undefined);
-		testItem.debuggable = item.debuggable;
 		testItem.description = item.description || undefined;
-		testItem.runnable = item.runnable;
 		return testItem;
 	}
 
@@ -1716,7 +1708,7 @@ export namespace TestResults {
 		const byInternalId = new Map<string, SerializedTestResultItem>();
 		for (const item of serialized.items) {
 			byInternalId.set(item.item.extId, item);
-			if (item.direct) {
+			if (serialized.request.targets.some(t => t.controllerId === item.controllerId && t.testIds.includes(item.item.extId))) {
 				roots.push(item);
 			}
 		}
