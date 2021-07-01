@@ -13,6 +13,7 @@ architectures:
 grade: stable
 confinement: classic
 base: core18
+compression: lzo
 
 parts:
   gnome:
