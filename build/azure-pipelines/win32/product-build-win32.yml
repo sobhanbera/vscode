@@ -246,9 +246,8 @@ steps:
     displayName: Download ESRPClient
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
-  - powershell: |
-      $ErrorActionPreference = 'SilentlyContinue'
-      $(esrpclient.toolpath)\$(esrpclient.toolname)
+  # - powershell: |
+  #     $(esrpclient.toolpath)\$(esrpclient.toolname)
 
   # - task: ESRPImportCertTask@1
   #   displayName: Import ESRP Request Signing Certificate
