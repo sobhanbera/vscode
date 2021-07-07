@@ -247,6 +247,7 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - powershell: |
+      $ErrorActionPreference = 'SilentlyContinue'
       $(esrpclient.toolpath)\$(esrpclient.toolname)
 
   # - task: ESRPImportCertTask@1
