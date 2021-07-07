@@ -21,10 +21,10 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 
 	const args: string[] = [];
 	let command = 'dotnet';
-	let dotnetVersion = '';
+	// let dotnetVersion = '';
 
 	try {
-		dotnetVersion = cp.execSync('dotnet --version', { encoding: 'utf8' }).trim();
+		/* dotnetVersion =  */cp.execSync('dotnet --version', { encoding: 'utf8' }).trim();
 		args.push(esrpClientPath);
 	} catch {
 		command = esrpClientPath;
@@ -56,7 +56,7 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 	args.push(
 		'vsts.sign',
 		'-a', username,
-		'-d', '72f988bf-86f1-41af-91ab-2d7cd011db47',
+		// '-d', '72f988bf-86f1-41af-91ab-2d7cd011db47',
 		'-k', clientkeyFile.name,
 		'-z', clientcertFile.name,
 		'-f', folderPath,
@@ -78,7 +78,7 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 		'-n', '5',
 		'-r', 'true',
 		'-e', keyFile.name,
-		'-w', dotnetVersion
+		// '-w', dotnetVersion
 	);
 
 	console.log('command:', command);
