@@ -39,7 +39,7 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 	const keyFile = tmp.fileSync();
 	const key = crypto.randomBytes(32);
 	const iv = crypto.randomBytes(16);
-	fs.writeFileSync(keyFile.name, JSON.stringify({ key, iv }));
+	fs.writeFileSync(keyFile.name, JSON.stringify({ key: key.toString('hex'), iv: iv.toString('hex') }));
 
 	const clientkeyFile = tmp.fileSync();
 	const clientkeyCypher = crypto.createCipheriv('aes-256-cbc', key, iv);
