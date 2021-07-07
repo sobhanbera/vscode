@@ -10,25 +10,14 @@ import * as crypto from 'crypto';
 
 tmp.setGracefulCleanup();
 
-function main([esrpClientPath, cert, username, password, folderPath, pattern, params]: string[]) {
-	console.log('esrpClientPath:', esrpClientPath);
+function main([esrpCliPath, cert, username, password, folderPath, pattern, params]: string[]) {
+	console.log('esrpCliPath:', esrpCliPath);
 	console.log('cert:', cert);
 	console.log('username:', username);
 	console.log('password:', password);
 	console.log('folderPath:', folderPath);
 	console.log('pattern:', pattern);
 	console.log('params:', params);
-
-	let command;
-	let args: string[];
-
-	if (process.platform === 'win32') {
-		command = esrpClientPath;
-		args = [];
-	} else {
-		command = 'dotnet';
-		args = [esrpClientPath];
-	}
 
 	const patternFile = tmp.fileSync();
 	fs.writeFileSync(patternFile.name, pattern);
@@ -53,7 +42,8 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 	clientcert += clientcertCypher.final('hex');
 	fs.writeFileSync(clientcertFile.name, clientcert);
 
-	args.push(
+	const args = [
+		esrpCliPath,
 		'vsts.sign',
 		'-a', username,
 		'-k', clientkeyFile.name,
@@ -77,12 +67,11 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 		'-n', '5',
 		'-r', 'true',
 		'-e', keyFile.name,
-	);
+	];
 
-	console.log('command:', command);
 	console.log('args:', args);
 
-	cp.spawnSync(command, args, { stdio: 'inherit' });
+	cp.spawnSync('dotnet', args, { stdio: 'inherit' });
 }
 
 main(process.argv.slice(2));

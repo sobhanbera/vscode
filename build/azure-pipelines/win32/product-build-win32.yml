@@ -251,24 +251,26 @@ steps:
       $EsrpCliZip = (gci -recurse -filter esrpcli.*.zip $EsrpClientTool | Select-Object -last 1).FullName
       mkdir -p $(Agent.TempDirectory)\esrpcli
       Expand-Archive -Path $EsrpCliZip -DestinationPath $(Agent.TempDirectory)\esrpcli
-      gci -recurse $(Agent.TempDirectory)\esrpcli
+      $EsrpCliZip = gci -recurse -filter esrpcli.dll $(Agent.TempDirectory)\esrpcli | Select-Object -last 1
+      echo "##vso[task.setvariable variable=esrpclient.toolpath]$EsrpToolPath"
+      echo "##vso[task.setvariable variable=esrpclient.toolname]esrpcli.dll"
 
-  # - powershell: |
-  #     mkdir -p .build/win32
-  #     Invoke-WebRequest -Uri https://az764295.vo.msecnd.net/insider/0a8a4b380b1da062cbcb352c06ad13fb87e21c12/VSCode-win32-x64-1.59.0-insider.zip -OutFile .build\code-win32.zip
-  #     Expand-Archive -Path .build\code-win32.zip -DestinationPath .build\win32
-  #     pushd build
-  #     yarn
-  #     yarn compile
-  #     popd
-  #     node build\azure-pipelines\common\sign `
-  #       "$(esrpclient.toolpath)\$(esrpclient.toolname)" `
-  #       "$(ESRP-PKI)" `
-  #       "$(esrp-aad-username)" `
-  #       "$(esrp-aad-password)" `
-  #       ".build/win32" `
-  #       '*.dll,*.exe,*.node' `
-  #       '[{"keyCode":"CP-230012","operationSetCode":"SigntoolSign","parameters":[{"parameterName":"OpusName","parameterValue":"VS Code"},{"parameterName":"OpusInfo","parameterValue":"https://code.visualstudio.com/"},{"parameterName":"Append","parameterValue":"/as"},{"parameterName":"FileDigest","parameterValue":"/fd \"SHA256\""},{"parameterName":"PageHash","parameterValue":"/NPH"},{"parameterName":"TimeStamp","parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"}],"toolName":"sign","toolVersion":"1.0"},{"keyCode":"CP-230012","operationSetCode":"SigntoolVerify","parameters":[{"parameterName":"VerifyAll","parameterValue":"/all"}],"toolName":"sign","toolVersion":"1.0"}]'
+  - powershell: |
+      mkdir -p .build/win32
+      Invoke-WebRequest -Uri https://az764295.vo.msecnd.net/insider/0a8a4b380b1da062cbcb352c06ad13fb87e21c12/VSCode-win32-x64-1.59.0-insider.zip -OutFile .build\code-win32.zip
+      Expand-Archive -Path .build\code-win32.zip -DestinationPath .build\win32
+      pushd build
+      yarn
+      yarn compile
+      popd
+      node build\azure-pipelines\common\sign `
+        "$(esrpclient.toolpath)\$(esrpclient.toolname)" `
+        "$(ESRP-PKI)" `
+        "$(esrp-aad-username)" `
+        "$(esrp-aad-password)" `
+        ".build/win32" `
+        '*.dll,*.exe,*.node' `
+        '[{"keyCode":"CP-230012","operationSetCode":"SigntoolSign","parameters":[{"parameterName":"OpusName","parameterValue":"VS Code"},{"parameterName":"OpusInfo","parameterValue":"https://code.visualstudio.com/"},{"parameterName":"Append","parameterValue":"/as"},{"parameterName":"FileDigest","parameterValue":"/fd \"SHA256\""},{"parameterName":"PageHash","parameterValue":"/NPH"},{"parameterName":"TimeStamp","parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"}],"toolName":"sign","toolVersion":"1.0"},{"keyCode":"CP-230012","operationSetCode":"SigntoolVerify","parameters":[{"parameterName":"VerifyAll","parameterValue":"/all"}],"toolName":"sign","toolVersion":"1.0"}]'
 
   # - task: ESRPImportCertTask@1
   #   displayName: Import ESRP Request Signing Certificate
