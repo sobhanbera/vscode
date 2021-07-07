@@ -32,6 +32,7 @@
     "@types/rimraf": "^2.0.4",
     "@types/through": "^0.0.29",
     "@types/through2": "^2.0.34",
+    "@types/tmp": "^0.2.1",
     "@types/underscore": "^1.8.9",
     "@types/xml2js": "0.0.33",
     "@typescript-eslint/experimental-utils": "~2.13.0",
@@ -52,6 +53,7 @@
     "p-limit": "^3.1.0",
     "plist": "^3.0.1",
     "source-map": "0.6.1",
+    "tmp": "^0.2.1",
     "typescript": "^4.4.0-dev.20210607",
     "vsce": "1.48.0",
     "vscode-universal": "deepak1556/universal#61454d96223b774c53cda10f72c2098c0ce02d58"
