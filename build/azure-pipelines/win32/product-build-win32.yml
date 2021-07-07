@@ -254,13 +254,13 @@ steps:
       yarn
       yarn compile
       popd
-      node build/azure-pipelines/common/sign \
-        "$(esrpclient.toolpath)/$(esrpclient.toolname)" \
-        "$(ESRP-PKI)" \
-        "$(esrp-aad-username)" \
-        "$(esrp-aad-password)" \
-        ".build/win32" \
-        '*.dll,*.exe,*.node' \
+      node build/azure-pipelines/common/sign `
+        "$(esrpclient.toolpath)/$(esrpclient.toolname)" `
+        "$(ESRP-PKI)" `
+        "$(esrp-aad-username)" `
+        "$(esrp-aad-password)" `
+        ".build/win32" `
+        '*.dll,*.exe,*.node' `
         '[{"keyCode":"CP-230012","operationSetCode":"SigntoolSign","parameters":[{"parameterName":"OpusName","parameterValue":"VS Code"},{"parameterName":"OpusInfo","parameterValue":"https://code.visualstudio.com/"},{"parameterName":"Append","parameterValue":"/as"},{"parameterName":"FileDigest","parameterValue":"/fd \"SHA256\""},{"parameterName":"PageHash","parameterValue":"/NPH"},{"parameterName":"TimeStamp","parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"}],"toolName":"sign","toolVersion":"1.0"},{"keyCode":"CP-230012","operationSetCode":"SigntoolVerify","parameters":[{"parameterName":"VerifyAll","parameterValue":"/all"}],"toolName":"sign","toolVersion":"1.0"}]'
 
   # - task: ESRPImportCertTask@1
