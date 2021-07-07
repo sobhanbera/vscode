@@ -247,13 +247,11 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - powershell: |
-      $EsrpClientTool = (Get-ChildItem -Path $(Agent.RootDirectory)\_tasks -Directory -Filter EsrpClientTool_* | Select-Object -last 1).FullName
-      echo $EsrpClientTool
-      gci -recurse $EsrpClientTool
-      # Get-ChildItem -Path $EsrpClientTool -Recurse -Filter esrpcli.exe
-      # $ESRP = (Get-ChildItem -Path $EsrpClientTool -Recurse -Filter esrpcli.exe | Select-Object -last 1).FullName
-      # echo $ESRP
-      # & $ESRP
+      $EsrpClientTool = (gci -directory -filter EsrpClientTool_* $(Agent.RootDirectory)\_tasks | Select-Object -last 1).FullName
+      $EsrpCliZip = (gci -recurse -filter esrpcli.2.0.87.zip $EsrpClientTool | Select-Object -last 1).FullName
+      mkdir -p $(Agent.TempDirectory)\esrpcli
+      Expand-Archive -Path $EsrpCliZip -DestinationPath $(Agent.TempDirectory)\esrpcli
+      ls $(Agent.TempDirectory)\esrpcli
 
   # - powershell: |
   #     mkdir -p .build/win32
