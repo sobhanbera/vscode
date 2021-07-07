@@ -247,15 +247,8 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - powershell: |
-      $EsrpClientTool = (Get-ChildItem -Path $(Agent.RootDirectory)\_tasks -Directory -Filter EsrpClientTool_* | Select-Object -last 1).FullName
-      echo $EsrpClientTool
-
-      Get-ChildItem -Path $EsrpClientTool
-      Get-ChildItem -Path $EsrpClientTool -Recurse -Filter esrpcli.exe
-
-      $ESRP = (Get-ChildItem -Path $EsrpClientTool -Recurse -Filter esrpcli.exe | Select-Object -last 1).FullName
-      echo $ESRP
-      # & $ESRP
+      echo $(esrpclient.toolpath)
+      echo $(esrpclient.toolname)
 
   # - task: ESRPImportCertTask@1
   #   displayName: Import ESRP Request Signing Certificate

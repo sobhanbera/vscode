@@ -244,6 +244,10 @@ steps:
     displayName: Download ESRPClient
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
+  - script: |
+    echo $(esrpclient.toolpath)
+    echo $(esrpclient.toolname)
+
   # - script: |
   #     set -e
   #     AZURE_DOCUMENTDB_MASTERKEY="$(builds-docdb-key-readwrite)" \
