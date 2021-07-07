@@ -241,6 +241,11 @@ steps:
   #     SessionTimeout: 120
   #   condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
+  - task: UseDotNet@2
+    displayName: "Install .NET Core SDK 2.x"
+    inputs:
+      version: 2.x
+
   # This is here just so the esrpcli tool is downloaded
   - task: EsrpClientTool@1
     displayName: Download ESRPClient
@@ -251,7 +256,8 @@ steps:
       $EsrpCliZip = (gci -recurse -filter esrpcli.*.zip $EsrpClientTool | Select-Object -last 1).FullName
       mkdir -p $(Agent.TempDirectory)\esrpcli
       Expand-Archive -Path $EsrpCliZip -DestinationPath $(Agent.TempDirectory)\esrpcli
-      $EsrpCliZip = gci -recurse -filter esrpcli.dll $(Agent.TempDirectory)\esrpcli | Select-Object -last 1
+      $EsrpCliDll = gci -recurse -filter esrpcli.dll $(Agent.TempDirectory)\esrpcli | Select-Object -last 1
+      $EsrpToolPath = $EsrpCliDll.Parent.FullName
       echo "##vso[task.setvariable variable=esrpclient.toolpath]$EsrpToolPath"
       echo "##vso[task.setvariable variable=esrpclient.toolname]esrpcli.dll"
 
