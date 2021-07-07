@@ -245,8 +245,8 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - script: |
-    echo $(esrpclient.toolpath)
-    echo $(esrpclient.toolname)
+      echo $(esrpclient.toolpath)
+      echo $(esrpclient.toolname)
 
   # - script: |
   #     set -e
