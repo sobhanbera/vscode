@@ -213,11 +213,11 @@ steps:
   #   condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   # # needed for code signing
-  # - task: UseDotNet@2
-  #   displayName: "Install .NET Core SDK 2.x"
-  #   inputs:
-  #     version: 2.x
-  #   condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
+  - task: UseDotNet@2
+    displayName: "Install .NET Core SDK 2.x"
+    inputs:
+      version: 2.x
+    # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   # - task: SFP.build-tasks.custom-build-task-1.EsrpCodeSigning@1
   #   inputs:
@@ -245,8 +245,7 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - script: |
-      echo $(esrpclient.toolpath)
-      echo $(esrpclient.toolname)
+      dotnet $(esrpclient.toolpath)/$(esrpclient.toolname) -v
 
   # - script: |
   #     set -e
