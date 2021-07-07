@@ -19,15 +19,15 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 	console.log('pattern:', pattern);
 	console.log('params:', params);
 
-	const args: string[] = [];
-	let command = 'dotnet';
-	// let dotnetVersion = '';
+	let command;
+	let args: string[];
 
-	try {
-		/* dotnetVersion =  */cp.execSync('dotnet --version', { encoding: 'utf8' }).trim();
-		args.push(esrpClientPath);
-	} catch {
+	if (process.platform === 'win32') {
 		command = esrpClientPath;
+		args = [];
+	} else {
+		command = 'dotnet';
+		args = [esrpClientPath];
 	}
 
 	const patternFile = tmp.fileSync();
