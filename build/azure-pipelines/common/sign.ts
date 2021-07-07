@@ -54,6 +54,7 @@ function main([esrpClientPath, cert, username, password, folderPath, pattern, pa
 	fs.writeFileSync(clientcertFile.name, clientcert);
 
 	args.push(
+		'vsts.sign',
 		'-a', username,
 		'-d', '72f988bf-86f1-41af-91ab-2d7cd011db47',
 		'-k', clientkeyFile.name,
