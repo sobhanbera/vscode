@@ -247,8 +247,7 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - powershell: |
-      echo $(esrpclient.toolpath)
-      echo $(esrpclient.toolname)
+      $(esrpclient.toolpath)\$(esrpclient.toolname) -Version
 
   # - task: ESRPImportCertTask@1
   #   displayName: Import ESRP Request Signing Certificate
