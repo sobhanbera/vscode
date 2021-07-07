@@ -248,10 +248,10 @@ steps:
 
   - powershell: |
       $EsrpClientTool = (gci -directory -filter EsrpClientTool_* $(Agent.RootDirectory)\_tasks | Select-Object -last 1).FullName
-      $EsrpCliZip = (gci -recurse -filter esrpcli.2.0.87.zip $EsrpClientTool | Select-Object -last 1).FullName
+      $EsrpCliZip = (gci -recurse -filter esrpcli.*.zip $EsrpClientTool | Select-Object -last 1).FullName
       mkdir -p $(Agent.TempDirectory)\esrpcli
       Expand-Archive -Path $EsrpCliZip -DestinationPath $(Agent.TempDirectory)\esrpcli
-      ls $(Agent.TempDirectory)\esrpcli
+      gci -recurse $(Agent.TempDirectory)\esrpcli
 
   # - powershell: |
   #     mkdir -p .build/win32
