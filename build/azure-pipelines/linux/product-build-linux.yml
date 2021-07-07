@@ -217,7 +217,7 @@ steps:
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   - script: |
-      dotnet $(esrpclient.toolpath)/$(esrpclient.toolname)
+      dotnet $(esrpclient.toolpath)/$(esrpclient.toolname) -?
 
   # - script: |
   #     set -e
