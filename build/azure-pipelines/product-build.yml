@@ -161,13 +161,13 @@ stages:
       #     steps:
       #       - template: win32/product-build-win32.yml
 
-      # - ${{ if and(eq(parameters.VSCODE_COMPILE_ONLY, false), eq(variables['VSCODE_BUILD_STAGE_LINUX'], true)) }}:
-      # - stage: Linux
-      #   # dependsOn:
-      #   #   - Compile
-      #   pool:
-      #     vmImage: "Ubuntu-18.04"
-      #   jobs:
+  # - ${{ if and(eq(parameters.VSCODE_COMPILE_ONLY, false), eq(variables['VSCODE_BUILD_STAGE_LINUX'], true)) }}:
+  - stage: Linux
+    # dependsOn:
+    #   - Compile
+    pool:
+      vmImage: "Ubuntu-18.04"
+    jobs:
       - ${{ if eq(parameters.VSCODE_BUILD_LINUX, true) }}:
           - job: Linux
             container: vscode-x64
