@@ -257,7 +257,9 @@ steps:
       mkdir -p $(Agent.TempDirectory)\esrpcli
       Expand-Archive -Path $EsrpCliZip -DestinationPath $(Agent.TempDirectory)\esrpcli
       $EsrpCliDllPath = (gci -recurse -filter esrpcli.dll $(Agent.TempDirectory)\esrpcli | Select-Object -last 1).FullName
+      echo "##vso[task.setvariable variable=EsrpCliDllPath]$EsrpCliDllPath"
 
+  - powershell: |
       mkdir -p .build/win32
       echo Downloading...
       $ProgressPreference = 'SilentlyContinue'
@@ -269,11 +271,8 @@ steps:
       yarn compile
       popd
 
-      $ParamsPath = [System.IO.Path]::GetTempFileName()
-      '[{"keyCode":"CP-230012","operationSetCode":"SigntoolSign","parameters":[{"parameterName":"OpusName","parameterValue":"VS Code"},{"parameterName":"OpusInfo","parameterValue":"https://code.visualstudio.com/"},{"parameterName":"Append","parameterValue":"/as"},{"parameterName":"FileDigest","parameterValue":"/fd \"SHA256\""},{"parameterName":"PageHash","parameterValue":"/NPH"},{"parameterName":"TimeStamp","parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"}],"toolName":"sign","toolVersion":"1.0"},{"keyCode":"CP-230012","operationSetCode":"SigntoolVerify","parameters":[{"parameterName":"VerifyAll","parameterValue":"/all"}],"toolName":"sign","toolVersion":"1.0"}]' | Out-File -Encoding ASCII $ParamsPath
-
       node build\azure-pipelines\common\sign `
-        $EsrpCliDllPath `
+        $env:EsrpCliDllPath `
         windows `
         "$(ESRP-PKI)" `
         "$(esrp-aad-username)" `
@@ -291,11 +290,6 @@ steps:
   #     # .\build\azure-pipelines\win32\import-cert.ps1 $(ESRP-PKI) ESRPCertificateSubjectName
   #     .\build\azure-pipelines\win32\import-cert.ps1 $(ESRP-SSL-AADAuth) ESRPAuthCertificateSubjectName
   #   displayName: Import ESRP Certificates
-  #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
-
-  # - powershell: |
-  #     .\build\azure-pipelines\win32\sign.ps1 .\build\win32\inno_updater.exe
-  #   displayName: Sign something
   #   # condition: and(succeeded(), ne(variables['VSCODE_PUBLISH'], 'false'))
 
   # - powershell: |

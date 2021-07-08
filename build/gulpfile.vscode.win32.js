@@ -26,7 +26,6 @@ const zipPath = arch => path.join(zipDir(arch), `VSCode-win32-${arch}.zip`);
 const setupDir = (arch, target) => path.join(repoPath, '.build', `win32-${arch}`, `${target}-setup`);
 const issPath = path.join(__dirname, 'win32', 'code.iss');
 const innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup'))), 'bin', 'ISCC.exe');
-const signPS1 = path.join(repoPath, 'build', 'azure-pipelines', 'win32', 'sign.ps1');
 
 function packageInnoSetup(iss, options, cb) {
 	options = options || {};
@@ -37,7 +36,9 @@ function packageInnoSetup(iss, options, cb) {
 		definitions['Debug'] = 'true';
 	}
 
-	if (process.argv.some(arg => arg === '--sign')) {
+	const signIndex = process.argv.indexOf('--sign');
+
+	if (signIndex > -1) {
 		definitions['Sign'] = 'true';
 	}
 
@@ -46,11 +47,13 @@ function packageInnoSetup(iss, options, cb) {
 	keys.forEach(key => assert(typeof definitions[key] === 'string', `Missing value for '${key}' in Inno Setup package step`));
 
 	const defs = keys.map(key => `/d${key}=${definitions[key]}`);
-	const args = [
-		iss,
-		...defs,
-		`/sesrp=powershell.exe -ExecutionPolicy bypass ${signPS1} $f`
-	];
+	const args = [iss, ...defs];
+
+	if (signIndex > -1) {
+		args.push(`/sesrp=node build\azure-pipelines\common\sign ${process.argv.slice(signIndex + 1).join(' ')} "." $f`);
+	}
+
+	console.log(args);
 
 	cp.spawn(innoSetupPath, args, { stdio: ['ignore', 'inherit', 'inherit'] })
 		.on('error', cb)
