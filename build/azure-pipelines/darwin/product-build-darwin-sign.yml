@@ -36,7 +36,7 @@ steps:
   - script: |
       set -e
       mkdir -p .build/darwin
-      curl -o .build/VSCode-darwin.zip https://az764295.vo.msecnd.net/insider/062e6519f8973fede2ca736e80682bd19007460a/VSCode-darwin.zip
+      curl -o .build/darwin/VSCode-darwin.zip https://az764295.vo.msecnd.net/insider/062e6519f8973fede2ca736e80682bd19007460a/VSCode-darwin.zip
 
       node build/azure-pipelines/common/sign \
         "$(esrpclient.toolpath)/$(esrpclient.toolname)" \
