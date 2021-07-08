@@ -1,7 +1,7 @@
 {
   "name": "code-oss-dev",
   "version": "1.59.0",
-  "distro": "d3a0cc9d45a73d4486d9969408ce4b21da76844f",
+  "distro": "757a8f7f6941034a2922879c5f2d5e99ce869a64",
   "author": {
     "name": "Microsoft Corporation"
   },
@@ -59,6 +59,7 @@
   "dependencies": {
     "applicationinsights": "1.0.8",
     "chokidar": "3.5.1",
+    "eslint-plugin-header": "3.1.1",
     "graceful-fs": "4.2.6",
     "http-proxy-agent": "^2.1.0",
     "https-proxy-agent": "^2.2.3",
