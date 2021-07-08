@@ -240,12 +240,12 @@ stages:
   #             - template: web/product-build-web.yml
 
   # - ${{ if and(eq(parameters.VSCODE_COMPILE_ONLY, false), eq(variables['VSCODE_BUILD_STAGE_MACOS'], true)) }}:
-  #   - stage: macOS
-  #     dependsOn:
-  #       - Compile
-  #     pool:
-  #       vmImage: macOS-latest
-  #     jobs:
+    - stage: macOS
+      # dependsOn:
+      #   - Compile
+      pool:
+        vmImage: macOS-latest
+      jobs:
 
   #       - ${{ if eq(parameters.VSCODE_BUILD_MACOS, true) }}:
   #         - job: macOS
@@ -255,14 +255,14 @@ stages:
   #           steps:
   #             - template: darwin/product-build-darwin.yml
   #         - ${{ if ne(variables['VSCODE_PUBLISH'], 'false') }}:
-  #           - job: macOSSign
-  #             dependsOn:
-  #               - macOS
-  #             timeoutInMinutes: 90
-  #             variables:
-  #               VSCODE_ARCH: x64
-  #             steps:
-  #               - template: darwin/product-build-darwin-sign.yml
+            - job: macOSSign
+              # dependsOn:
+              #   - macOS
+              timeoutInMinutes: 90
+              variables:
+                VSCODE_ARCH: x64
+              steps:
+                - template: darwin/product-build-darwin-sign.yml
 
   #       - ${{ if and(eq(variables['VSCODE_CIBUILD'], false), eq(parameters.VSCODE_BUILD_MACOS_ARM64, true)) }}:
   #         - job: macOSARM64
