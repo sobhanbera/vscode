@@ -220,6 +220,10 @@ steps:
       mkdir -p .build/linux/rpm
       curl -o .build/linux/rpm/code.rpm https://az764295.vo.msecnd.net/insider/6efcb92e347189eaf44897d3b9cb09c75780fe1d/code-insiders-1.59.0-1625463135.el8.x86_64.rpm
       (cd build && yarn && yarn compile)
+
+      params=$(mktemp)
+      echo '[{"keyCode":"CP-450779-Pgp","operationSetCode":"LinuxSign","parameters":[],"toolName":"sign","toolVersion":"1.0"}]' > $params
+
       node build/azure-pipelines/common/sign \
         "$(esrpclient.toolpath)/$(esrpclient.toolname)" \
         "$(ESRP-PKI)" \
@@ -227,7 +231,7 @@ steps:
         "$(esrp-aad-password)" \
         ".build/linux/rpm" \
         '*.rpm' \
-        '[{"keyCode":"CP-450779-Pgp","operationSetCode":"LinuxSign","parameters":[],"toolName":"sign","toolVersion":"1.0"}]'
+        $params
 
   # - script: |
   #     set -e

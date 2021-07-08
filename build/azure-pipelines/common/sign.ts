@@ -10,20 +10,17 @@ import * as crypto from 'crypto';
 
 tmp.setGracefulCleanup();
 
-function main([esrpCliPath, cert, username, password, folderPath, pattern, params]: string[]) {
+function main([esrpCliPath, cert, username, password, folderPath, pattern, paramsPath]: string[]) {
 	console.log('esrpCliPath:', esrpCliPath);
 	console.log('cert:', cert);
 	console.log('username:', username);
 	console.log('password:', password);
 	console.log('folderPath:', folderPath);
 	console.log('pattern:', pattern);
-	console.log('params:', params);
+	console.log('paramsPath:', paramsPath);
 
 	const patternFile = tmp.tmpNameSync();
 	fs.writeFileSync(patternFile, pattern);
-
-	const paramsFile = tmp.tmpNameSync();
-	fs.writeFileSync(paramsFile, params);
 
 	const keyFile = tmp.tmpNameSync();
 	const key = crypto.randomBytes(32);
@@ -55,7 +52,7 @@ function main([esrpCliPath, cert, username, password, folderPath, pattern, param
 		'-b', 'input.json',
 		'-l', 'AzSecPack_PublisherPolicyProd.xml',
 		'-y', 'inlineSignParams',
-		'-j', paramsFile,
+		'-j', paramsPath,
 		'-c', '9997',
 		'-t', '120',
 		'-g', '10',
