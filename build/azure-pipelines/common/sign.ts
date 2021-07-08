@@ -19,43 +19,43 @@ function main([esrpCliPath, cert, username, password, folderPath, pattern, param
 	console.log('pattern:', pattern);
 	console.log('params:', params);
 
-	const patternFile = tmp.fileSync();
-	fs.writeFileSync(patternFile.name, pattern);
+	const patternFile = tmp.tmpNameSync();
+	fs.writeFileSync(patternFile, pattern);
 
-	const paramsFile = tmp.fileSync();
-	fs.writeFileSync(paramsFile.name, params);
+	const paramsFile = tmp.tmpNameSync();
+	fs.writeFileSync(paramsFile, params);
 
-	const keyFile = tmp.fileSync();
+	const keyFile = tmp.tmpNameSync();
 	const key = crypto.randomBytes(32);
 	const iv = crypto.randomBytes(16);
-	fs.writeFileSync(keyFile.name, JSON.stringify({ key: key.toString('hex'), iv: iv.toString('hex') }));
+	fs.writeFileSync(keyFile, JSON.stringify({ key: key.toString('hex'), iv: iv.toString('hex') }));
 
-	const clientkeyFile = tmp.fileSync();
+	const clientkeyFile = tmp.tmpNameSync();
 	const clientkeyCypher = crypto.createCipheriv('aes-256-cbc', key, iv);
 	let clientkey = clientkeyCypher.update(password, 'utf8', 'hex');
 	clientkey += clientkeyCypher.final('hex');
-	fs.writeFileSync(clientkeyFile.name, clientkey);
+	fs.writeFileSync(clientkeyFile, clientkey);
 
-	const clientcertFile = tmp.fileSync();
+	const clientcertFile = tmp.tmpNameSync();
 	const clientcertCypher = crypto.createCipheriv('aes-256-cbc', key, iv);
 	let clientcert = clientcertCypher.update(cert, 'utf8', 'hex');
 	clientcert += clientcertCypher.final('hex');
-	fs.writeFileSync(clientcertFile.name, clientcert);
+	fs.writeFileSync(clientcertFile, clientcert);
 
 	const args = [
 		esrpCliPath,
 		'vsts.sign',
 		'-a', username,
-		'-k', clientkeyFile.name,
-		'-z', clientcertFile.name,
+		'-k', clientkeyFile,
+		'-z', clientcertFile,
 		'-f', folderPath,
-		'-p', patternFile.name,
+		'-p', patternFile,
 		'-u', 'false',
 		'-x', 'regularSigning',
 		'-b', 'input.json',
 		'-l', 'AzSecPack_PublisherPolicyProd.xml',
 		'-y', 'inlineSignParams',
-		'-j', paramsFile.name,
+		'-j', paramsFile,
 		'-c', '9997',
 		'-t', '120',
 		'-g', '10',
@@ -66,7 +66,7 @@ function main([esrpCliPath, cert, username, password, folderPath, pattern, param
 		'-i', 'https://www.microsoft.com',
 		'-n', '5',
 		'-r', 'true',
-		'-e', keyFile.name,
+		'-e', keyFile,
 	];
 
 	console.log('args:', args);
