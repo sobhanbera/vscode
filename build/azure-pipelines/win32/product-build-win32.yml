@@ -274,12 +274,12 @@ steps:
 
       node build\azure-pipelines\common\sign `
         $EsrpCliDllPath `
+        windows `
         "$(ESRP-PKI)" `
         "$(esrp-aad-username)" `
         "$(esrp-aad-password)" `
         ".build/win32" `
-        '*.dll,*.exe,*.node' `
-        $ParamsPath
+        '*.dll,*.exe,*.node'
 
   # - task: ESRPImportCertTask@1
   #   displayName: Import ESRP Request Signing Certificate

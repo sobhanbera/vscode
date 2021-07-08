@@ -10,43 +10,49 @@ import * as crypto from 'crypto';
 
 tmp.setGracefulCleanup();
 
-function main([esrpCliPath, cert, username, password, folderPath, pattern, paramsPath]: string[]) {
-	console.log('esrpCliPath:', esrpCliPath);
-	console.log('cert:', cert);
-	console.log('username:', username);
-	console.log('password:', password);
-	console.log('folderPath:', folderPath);
-	console.log('pattern:', pattern);
-	console.log('paramsPath:', paramsPath);
+function getParams(type: string): string {
+	switch (type) {
+		case 'windows':
+			return '[{"keyCode":"CP-230012","operationSetCode":"SigntoolSign","parameters":[{"parameterName":"OpusName","parameterValue":"VS Code"},{"parameterName":"OpusInfo","parameterValue":"https://code.visualstudio.com/"},{"parameterName":"Append","parameterValue":"/as"},{"parameterName":"FileDigest","parameterValue":"/fd \"SHA256\""},{"parameterName":"PageHash","parameterValue":"/NPH"},{"parameterName":"TimeStamp","parameterValue":"/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"}],"toolName":"sign","toolVersion":"1.0"},{"keyCode":"CP-230012","operationSetCode":"SigntoolVerify","parameters":[{"parameterName":"VerifyAll","parameterValue":"/all"}],"toolName":"sign","toolVersion":"1.0"}]';
+		case 'rpm':
+			return '[{ "keyCode": "CP-450779-Pgp", "operationSetCode": "LinuxSign", "parameters": [], "toolName": "sign", "toolVersion": "1.0" }]';
+		default:
+			throw new Error(`Sign type ${type} not found`);
+	}
+}
 
-	const patternFile = tmp.tmpNameSync();
-	fs.writeFileSync(patternFile, pattern);
+function main([esrpCliPath, type, cert, username, password, folderPath, pattern]: string[]) {
+	const patternPath = tmp.tmpNameSync();
+	fs.writeFileSync(patternPath, pattern);
+
+	const paramsPath = tmp.tmpNameSync();
+	fs.writeFileSync(paramsPath, getParams(type));
 
 	const keyFile = tmp.tmpNameSync();
 	const key = crypto.randomBytes(32);
 	const iv = crypto.randomBytes(16);
 	fs.writeFileSync(keyFile, JSON.stringify({ key: key.toString('hex'), iv: iv.toString('hex') }));
 
-	const clientkeyFile = tmp.tmpNameSync();
+	const clientkeyPath = tmp.tmpNameSync();
 	const clientkeyCypher = crypto.createCipheriv('aes-256-cbc', key, iv);
 	let clientkey = clientkeyCypher.update(password, 'utf8', 'hex');
 	clientkey += clientkeyCypher.final('hex');
-	fs.writeFileSync(clientkeyFile, clientkey);
+	fs.writeFileSync(clientkeyPath, clientkey);
 
-	const clientcertFile = tmp.tmpNameSync();
+	const clientcertPath = tmp.tmpNameSync();
 	const clientcertCypher = crypto.createCipheriv('aes-256-cbc', key, iv);
 	let clientcert = clientcertCypher.update(cert, 'utf8', 'hex');
 	clientcert += clientcertCypher.final('hex');
-	fs.writeFileSync(clientcertFile, clientcert);
+	fs.writeFileSync(clientcertPath, clientcert);
 
 	const args = [
 		esrpCliPath,
 		'vsts.sign',
 		'-a', username,
-		'-k', clientkeyFile,
-		'-z', clientcertFile,
+		'-k', clientkeyPath,
+		'-z', clientcertPath,
 		'-f', folderPath,
-		'-p', patternFile,
+		'-p', patternPath,
 		'-u', 'false',
 		'-x', 'regularSigning',
 		'-b', 'input.json',
@@ -65,8 +71,6 @@ function main([esrpCliPath, cert, username, password, folderPath, pattern, param
 		'-r', 'true',
 		'-e', keyFile,
 	];
-
-	console.log('args:', args);
 
 	cp.spawnSync('dotnet', args, { stdio: 'inherit' });
 }
