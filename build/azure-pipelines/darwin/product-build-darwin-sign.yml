@@ -28,12 +28,10 @@ steps:
     displayName: Merge distro
 
   - script: |
-      pushd build \
-      && yarn \
-      && npm install -g typescript \
-      && tsc azure-pipelines/common/createAsset.ts \
-      && popd
-    displayName: Restore modules for just build folder and compile it
+      set -e
+      yarn --cwd build
+      yarn --cwd build compile
+    displayName: Compile build tools
 
   - download: current
     artifact: unsigned_vscode_client_darwin_$(VSCODE_ARCH)_archive
