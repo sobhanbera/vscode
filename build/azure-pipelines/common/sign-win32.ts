@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { main } from './sign';
+import * as path from 'path';
 
 main([
 	process.env['EsrpCliDllPath']!,
@@ -11,6 +12,6 @@ main([
 	process.env['ESRPPKI']!,
 	process.env['ESRPAADUsername']!,
 	process.env['ESRPAADPassword']!,
-	'.',
-	...process.argv.slice(2)
+	path.dirname(process.argv[2]),
+	path.basename(process.argv[2])
 ]);
