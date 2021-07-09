@@ -8,8 +8,6 @@ import * as fs from 'fs';
 import * as tmp from 'tmp';
 import * as crypto from 'crypto';
 
-tmp.setGracefulCleanup();
-
 function getParams(type: string): string {
 	switch (type) {
 		case 'windows':
@@ -25,7 +23,9 @@ function getParams(type: string): string {
 	}
 }
 
-function main([esrpCliPath, type, cert, username, password, folderPath, pattern]: string[]) {
+export function main([esrpCliPath, type, cert, username, password, folderPath, pattern]: string[]) {
+	tmp.setGracefulCleanup();
+
 	const patternPath = tmp.tmpNameSync();
 	fs.writeFileSync(patternPath, pattern);
 
@@ -79,4 +79,6 @@ function main([esrpCliPath, type, cert, username, password, folderPath, pattern]
 	cp.spawnSync('dotnet', args, { stdio: 'inherit' });
 }
 
-main(process.argv.slice(2));
+if (require.main === module) {
+	main(process.argv.slice(2));
+}

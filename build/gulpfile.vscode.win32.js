@@ -50,7 +50,7 @@ function packageInnoSetup(iss, options, cb) {
 	const args = [iss, ...defs];
 
 	if (signIndex > -1) {
-		args.push(`/sesrp=node build\azure-pipelines\common\sign ${process.argv.slice(signIndex + 1).join(' ')} "." $f`);
+		args.push(`/sesrp=node build\azure-pipelines\common\sign-win32 . $f`);
 	}
 
 	// TODO@joao: remove
