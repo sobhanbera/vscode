@@ -26,6 +26,7 @@ const zipPath = arch => path.join(zipDir(arch), `VSCode-win32-${arch}.zip`);
 const setupDir = (arch, target) => path.join(repoPath, '.build', `win32-${arch}`, `${target}-setup`);
 const issPath = path.join(__dirname, 'win32', 'code.iss');
 const innoSetupPath = path.join(path.dirname(path.dirname(require.resolve('innosetup'))), 'bin', 'ISCC.exe');
+const signWin32Path = path.join(repoPath, 'build', 'azure-pipelines', 'common', 'sign-win32');
 
 function packageInnoSetup(iss, options, cb) {
 	options = options || {};
@@ -50,7 +51,7 @@ function packageInnoSetup(iss, options, cb) {
 	const args = [iss, ...defs];
 
 	if (signIndex > -1) {
-		args.push(`/sesrp=node build\\azure-pipelines\\common\\sign-win32 . $f`);
+	args.push(`/sesrp=node ${signWin32Path} $f`);
 	}
 
 	// TODO@joao: remove

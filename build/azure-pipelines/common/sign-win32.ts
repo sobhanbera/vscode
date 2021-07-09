@@ -11,5 +11,6 @@ main([
 	process.env['ESRPPKI']!,
 	process.env['ESRPAADUsername']!,
 	process.env['ESRPAADPassword']!,
+	'.',
 	...process.argv.slice(2)
 ]);
